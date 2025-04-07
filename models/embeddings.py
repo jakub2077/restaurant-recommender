@@ -44,7 +44,6 @@ class Classifier(nn.Module):
         embeds = (edge_feat_user * edge_feat_restaurant).sum(dim=-1)
         return embeds
 
-# TODO: add varriables for layer sizes, check size of embeddings
 class EmbeddingModel(nn.Module):
     """
     The `EmbeddingModel` class is a PyTorch module that learns node embeddings for a heterogeneous graph data. 
@@ -63,8 +62,15 @@ class EmbeddingModel(nn.Module):
     """
     def __init__(self, hidden_channels: int, data: HeteroData, dropout: float = 0.5):
         super().__init__()
-        self.user_lin = nn.Linear(5, hidden_channels)
-        self.restaurant_lin = nn.Linear(640, hidden_channels)
+        self.user_input_size = 5
+        self.restaurant_input_size = 640
+        self.hidden_channels = hidden_channels
+
+        self.user_lin = nn.Linear(self.user_input_size, hidden_channels)
+        self.restaurant_lin = nn.Linear(self.restaurant_input_size, hidden_channels)
+
+        # self.user_lin = nn.Linear(5, hidden_channels)
+        # self.restaurant_lin = nn.Linear(640, hidden_channels)
 
         self.user_emb = nn.Embedding(data["user"].num_nodes, hidden_channels)
         self.restaurant_emb = nn.Embedding(data["restaurant"].num_nodes, hidden_channels)
@@ -88,3 +94,6 @@ class EmbeddingModel(nn.Module):
             data["user", "rating", "restaurant"].edge_label_index,
         )
         return pred
+
+if __name__ == "__main__":
+    pass

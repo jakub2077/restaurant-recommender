@@ -115,7 +115,7 @@ class Model(torch.nn.Module):
     def __init__(self, hidden_channels):
         super().__init__()
         self.encoder = GNNEncoder(hidden_channels, hidden_channels)
-        self.encoder = to_hetero(self.encoder, data.metadata(), aggr='sum')
+        self.encoder = to_hetero(self.encoder, data.metadata(), aggr='sum') # TODO: data.metadata() method is outside of this class
         self.decoder = EdgeDecoder(hidden_channels)
 
     def forward(self, x_dict, edge_index_dict, edge_label_index):
@@ -194,8 +194,8 @@ if __name__ == '__main__':
     parser.add_argument('--epochs', type=int, default=100)
     parser.add_argument('--lr', type=float, default=0.01)
     parser.add_argument('--hidden_channels', type=int, default=32)
-    parser.add_argument('--data_path', type=str, default='data/2/yelp-hetero.pt')
-    parser.add_argument('--meta_data_path', type=str, default='data/2/yelp-hetero-meta.json')
+    parser.add_argument('--data_path', type=str, default='data/base/yelp-hetero.pt')
+    parser.add_argument('--meta_data_path', type=str, default='data/base/yelp-hetero-meta.json')
     args = parser.parse_args()
 
     # Set up TensorrBoard
@@ -211,7 +211,7 @@ if __name__ == '__main__':
         'hidden_channels': args.hidden_channels
     }
     writer = SummaryWriter()
-    writer.add_hparams(hparams, {'hparam/loss': 0})  # Initial loss is set to 0
+    writer.add_hparams(hparams, {'hparam/ loss': 0})  # Initial loss is set to 0
 
     # writer.add_custom_scalars(layout)
 
